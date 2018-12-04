@@ -3,7 +3,7 @@ const router = express.Router()
 const controller = require('../controllers/bookController')
 
 router.get('/', controller.getAll)
-// router.get('/:id', controller,getOne)
+router.get('/:id', controller.getOne)
 // router.post('/', controller.postBook)
 // router.put('/:id', controller.editBook)
 // router.delete(':id', controller.deleteBook)
