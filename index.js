@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const port = 3222
+const port = process.env.PORT || 3222
 const cors = require('cors')
 const bookRoutes = require('./routes/bookRoutes')
-// const authorRoutes = require('./routes/authorRoutes')
-// const book_authorsRoutes = require('./routes/book_authorsRoutes')
+const authorRoutes = require('./routes/authorRoutes')
+const book_authorsRoutes = require('./routes/book_authorsRoutes')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
@@ -21,8 +21,8 @@ app.get('/', (req, res, next) => {
 })
 
 app.use('/books', bookRoutes)
-// app.use('/authors', authorRoutes)
-// app.use('/book_authors', book_authorsRoutes)
+app.use('/authors', authorRoutes)
+app.use('/book_authors', book_authorsRoutes)
 
 app.use(notFound);
 app.use(errorHandler);
