@@ -1,0 +1,30 @@
+{
+  "name": "Galvanize-Reads-Database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyle-Ski/Galvanize-Reads-Database.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyle-Ski/Galvanize-Reads-Database/issues"
+  },
+  "homepage": "https://github.com/Kyle-Ski/Galvanize-Reads-Database#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "knex": "^0.15.2",
+    "nodemon": "^1.18.7",
+    "pg": "^7.7.1"
+  }
+}
