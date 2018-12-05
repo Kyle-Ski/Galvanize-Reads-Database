@@ -12,11 +12,18 @@ app.use(cors())
 
 
 app.get('/', (req, res, next) => {
+    process.env.NODE_ENV !== 'production' ?
     res.json({
         message: 'What\'s up? Welcome to the Reads database!',
         books: `http://localhost:${port}/books`,
         authors: `http://localhost:${port}/authors`,
         book_authors: `http://localhost:${port}/book_authors`
+    }) :
+    res.json({
+        message: 'What\'s up? Welcome to the Reads database!',
+        books: `https://galvanize-reads-ski.herokuapp.com/books`,
+        authors: `https://galvanize-reads-ski.herokuapp.com/authors`,
+        book_authors: `https://galvanize-reads-ski.herokuapp.com/book_authors`
     })
 })
 
@@ -38,4 +45,8 @@ function errorHandler(err, req, res, next) {
 }
 
 
-app.listen(port, () => console.log(`I got you on http://localhost:${port}`))
+app.listen(port, () => {
+    process.env.NODE_ENV !== 'production' ?
+    console.log(`I got you on http://localhost:${port}`) :
+    console.log(`I got you on https://galvanize-reads-ski.herokuapp.com/`)
+})
