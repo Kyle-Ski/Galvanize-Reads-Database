@@ -24,9 +24,18 @@ const getOne = (req, res, next) => {
             .catch(err => console.error("Error:", err))
     }
 }
-// const postBook = (req, res, next) => {
-//     return 
-// }
+const postBook = (req, res, next) => {
+    const body = req.body
+    if(!body.title || !body.genre || ! body.description || !body.coverURL){
+        res.status(400).json({error: "Please fill out all parts of the form to add a book."})
+    } else {
+        return knex('book')
+            .insert(body)
+            .returning('*')
+            .then(book => res.json({book: book[0]}))
+            .catch(err => console.error("Error:", err))
+    }
+}
 // const editBook = (req, res, next) => {
 //     return 
 // }
@@ -37,7 +46,7 @@ const getOne = (req, res, next) => {
 module.exports = {
     getAll,
     getOne,
-    //postBook,
+    postBook,
     //editBook,
     //deleteBook
 }
