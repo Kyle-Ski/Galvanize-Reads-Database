@@ -6,6 +6,7 @@ const getAll = (req, res, next) => {
         .then(books => res.json({books}))
         .catch(err => console.error("Error:", err))
 }
+
 const getOne = (req, res, next) => {
     const id = req.params.id
     if(!Number(id)){
@@ -39,14 +40,30 @@ const postBook = (req, res, next) => {
 // const editBook = (req, res, next) => {
 //     return 
 // }
-// const deleteBook = (req, res, next) => {
-//     return 
-// }
+const deleteBook = (req, res, next) => {
+    const id = req.params.id
+    if(!Number(id)){
+        res.status(404).json({error: 'Please enter a valid id'})
+    } else {
+        return knex('book')
+            .where('id', id)
+            .then(book => {
+                if(!book.length){
+                    return res.status(404).json({error: 'Please enter a valid id'})
+                } else {
+                    return book
+                }
+            })
+            .delete()
+            .returning('*')
+            .then(book =>res.json({deleted: book[0]}))
+    }
+}
 
 module.exports = {
     getAll,
     getOne,
     postBook,
     //editBook,
-    //deleteBook
+    deleteBook
 }
