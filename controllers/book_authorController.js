@@ -1,14 +1,53 @@
 const knex = require('../db/connection')
-
-const getAll = (req, res, next) => {
+const reformat = require('../db/reformatBooks')
+const reformatAuthors = require('../db/reformatAuthors')
+const getBooks = (req, res, next) => {
     return knex('book')
-        .select('*')
-        .innerJoin('book_authors', 'book.id', 'book_authors.book_id')
-        .innerJoin('author', 'book_author.author_id', 'author.id')
-        // .orderBy('book.id', 'asc')
-        .then(book_authors => res.json({book_authors: book_authors}))
-        .catch(err => console.error("Error:", err))
+        .select(
+            'book.id as book_id',
+            'book.title as title',
+            'book.genre',
+            'book.description',
+            'book.coverURL',
+            'author.id as author_id',
+            'author.firstName',
+            'author.lastName',
+            'author.biography',
+            'author.imageURL'
+        )
+        .join('book_authors', 'book_authors.book_id', 'book.id')
+        .join('author', 'author.id', 'book_authors.author_id')
+        .then(books => {
+            const reformatted = reformat.reformatBooks(books)
+            res.json({books: reformatted})
+        })
+        .catch(err => console.error(err))
 }
+
+const getAuthors = (req, res, next) => {
+    return knex('book')
+        .select(
+            'book.id as book_id',
+            'book.title as title',
+            'book.genre',
+            'book.description',
+            'book.coverURL',
+            'author.id as author_id',
+            'author.firstName',
+            'author.lastName',
+            'author.biography',
+            'author.imageURL'
+        )
+        .join('book_authors', 'book_authors.book_id', 'book.id')
+        .join('author', 'author.id', 'book_authors.author_id')
+        .then(authors => {
+            const reformatted = reformatAuthors.reformatAuthors(authors)
+            res.json({authors: reformatted})
+        })
+        .catch(err => console.error(err))
+}
+
+
 // const getOne = (req, res, next) => {
 //     const id = req.params.id
 //     if(!Number(id)){
@@ -38,8 +77,8 @@ const getAll = (req, res, next) => {
 // }
 
 module.exports = {
-    getAll,
-    // getOne,
+    getBooks,
+    getAuthors,
     //postBook,
     //editBook,
     //deleteBook
