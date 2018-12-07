@@ -36,17 +36,37 @@ const postAuthor = (req, res, next) => {
             .catch(err => console.error("Error:", err))
     }
 }
-// const editAuthor = (req, res, next) => {
-//     return 
-// }
-// const deleteAuthor = (req, res, next) => {
-//     return 
-// }
+const editAuthor = (req, res, next) => {
+    const id = req.params.id
+    const body = req.body
+    if (!Number(id)) {
+        return res.status(404).json({ error: "Please enter a valid ID number" })
+    } else {
+        return knex('author')
+            .where('id', id)
+            .update(body)
+            .returning('*')
+            .then(author => res.json({author: author[0]}))
+    }
+}
+const deleteAuthor = (req, res, next) => {
+    const id = req.params.id
+    if (!Number(id)) {
+        res.status(404).json({ error: 'Please enter a valid id' })
+    } else {
+        return knex('author')
+            .where('id', id)
+            .delete()
+            .returning('*')
+            .then(author => res.json({ deleted: author[0] }))
+            .catch(err => console.error(err))
+    }
+}
 
 module.exports = {
     getAll,
     getOne,
     postAuthor,
-    //editAuthor,
-    //deleteAuthor
+    editAuthor,
+    deleteAuthor
 }
