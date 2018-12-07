@@ -14,7 +14,7 @@ const reformatBooks = (books) => {
             })
         } else {
             bookById[currentBookId] = {
-                book_id: book.book_id,
+                id: book.book_id,
                 title: book.title,
                 genre: book.genre,
                 description: book.description,
