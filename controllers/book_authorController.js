@@ -47,7 +47,12 @@ const getAuthors = (req, res, next) => {
         .catch(err => console.error(err))
 }
 
-
+const getAll = (req, res, next) => {
+    return knex('book_authors')
+        .orderBy('id', 'asc')
+        .then(books => res.json({ books }))
+        .catch(err => console.error("Error:", err))
+    } 
 // const getOne = (req, res, next) => {
 //     const id = req.params.id
 //     if(!Number(id)){
@@ -79,6 +84,7 @@ const getAuthors = (req, res, next) => {
 module.exports = {
     getBooks,
     getAuthors,
+    getAll,
     //postBook,
     //editBook,
     //deleteBook
