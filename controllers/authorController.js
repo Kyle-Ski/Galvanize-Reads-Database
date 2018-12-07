@@ -24,9 +24,18 @@ const getOne = (req, res, next) => {
             .catch(err => console.error("Error:", err))
     }
 }
-// const postAuthor = (req, res, next) => {
-//     return 
-// }
+const postAuthor = (req, res, next) => {
+    const body = req.body
+    if (!body.firstName || !body.lastName || !body.biography || !body.imageURL) {
+        res.status(400).json({ error: "Please fill out all parts of the form to add an author." })
+    } else {
+        return knex('author')
+            .insert(body)
+            .returning('*')
+            .then(author => res.json({ author: author[0] }))
+            .catch(err => console.error("Error:", err))
+    }
+}
 // const editAuthor = (req, res, next) => {
 //     return 
 // }
@@ -37,7 +46,7 @@ const getOne = (req, res, next) => {
 module.exports = {
     getAll,
     getOne,
-    //postAuthor,
+    postAuthor,
     //editAuthor,
     //deleteAuthor
 }

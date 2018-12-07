@@ -2,10 +2,10 @@ const knex = require('../db/connection')
 
 const getAll = (req, res, next) => {
     return knex('book')
-        .select('author.name')
+        .select('*')
         .innerJoin('book_authors', 'book.id', 'book_authors.book_id')
-        .innerJoin('author', 'author.id', 'book_author.author_id')
-        .orderBy('book.id', 'asc')
+        .innerJoin('author', 'book_author.author_id', 'author.id')
+        // .orderBy('book.id', 'asc')
         .then(book_authors => res.json({book_authors: book_authors}))
         .catch(err => console.error("Error:", err))
 }
