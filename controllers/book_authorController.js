@@ -71,9 +71,18 @@ const getAll = (req, res, next) => {
 //             .catch(err => console.error("Error:", err))
 //     }
 // }
-// const postBook = (req, res, next) => {
-//     return 
-// }
+const postBook = (req, res, next) => {
+    const body = req.body
+    if(!body.author_id || !body.book_id ){
+        res.status(400).json({error: 'Please make sure the author and book are in the database'})
+    } else {
+        return knex('book_authors')
+            .insert(body)
+            .returning('*')
+            .then(book_authors => res.json({ new: book_authors[0]}))
+            .catch(err => console.error(err))
+    }
+}
 // const editBook = (req, res, next) => {
 //     return 
 // }
@@ -85,7 +94,7 @@ module.exports = {
     getBooks,
     getAuthors,
     getAll,
-    //postBook,
+    postBook,
     //editBook,
     //deleteBook
 }
