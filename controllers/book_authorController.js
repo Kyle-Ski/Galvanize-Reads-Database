@@ -53,34 +53,32 @@ const getAll = (req, res, next) => {
         .then(books => res.json({ books }))
         .catch(err => console.error("Error:", err))
     } 
-// const getOne = (req, res, next) => {
-//     const id = req.params.id
-//     if(!Number(id)){
-//         res.status(404).json({error: 'Please enter a valid id'})
-//     } else {
-//         return knex('book_authors')
-//             .select('*')
-//             .where('id', id)
-//             .then(book => {
-//                 if(!book.length){
-//                     res.status(404).json({error: 'That book doesn\'t exist yet'})
-//                 } else {
-//                     return res.json({book})
-//                 }
-//             })
-//             .catch(err => console.error("Error:", err))
-//     }
-// }
+    
 const postBook = (req, res, next) => {
     const body = req.body
     if(!body.author_id || !body.book_id ){
         res.status(400).json({error: 'Please make sure the author and book are in the database'})
     } else {
-        return knex('book_authors')
-            .insert(body)
-            .returning('*')
-            .then(book_authors => res.json({ new: book_authors[0]}))
-            .catch(err => console.error(err))
+        if (body.author_id.length > 1){
+            body.author_id.map((author, i) => {
+                return knex('book_authors')
+                    .insert([{author_id: author, book_id: body.book_id}])
+                    .returning('*')
+                    .then((book_authors) => {
+                        console.log(book_authors[0])
+                        //can insert multiple authors, can't res.json
+                        res.json({ new: book_authors[0] })
+                        // return book_authors.map(({item}) => console.log("item:",item)/*res.json({ item })*/)
+                    })
+                    .catch(err => console.error(err))
+            })
+        }
+        // res.json({ new: book_authors[0] })
+        // return knex('book_authors')
+        //     .insert(body)
+        //     .returning('*')
+        //     .then(book_authors => res.json({ new: book_authors[0]}))
+        //     .catch(err => console.error(err))
     }
 }
 // const editBook = (req, res, next) => {
