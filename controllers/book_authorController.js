@@ -60,25 +60,29 @@ const postBook = (req, res, next) => {
         res.status(400).json({error: 'Please make sure the author and book are in the database'})
     } else {
         if (body.author_id.length > 1){
-            body.author_id.map((author, i) => {
+            let response = []
+            Promise.all(body.author_id.map((author, i) => {
                 return knex('book_authors')
-                    .insert([{author_id: author, book_id: body.book_id}])
+                    .insert({author_id: author, book_id: body.book_id})
                     .returning('*')
                     .then((book_authors) => {
-                        console.log(book_authors[0])
-                        //can insert multiple authors, can't res.json
-                        res.json({ new: book_authors[0] })
-                        // return book_authors.map(({item}) => console.log("item:",item)/*res.json({ item })*/)
+                        response.push(book_authors[0])
+                        return book_authors
                     })
                     .catch(err => console.error(err))
+            }))
+            .then(() => res.json({new: response}))
+            .catch(err => {
+                console.error(err)
+                return res.json({error: err})
             })
+        } else {
+            return knex('book_authors')
+                .insert(body)
+                .returning('*')
+                .then(data => res.json({new: data[0]}))
+                .catch(err => console.error(err))
         }
-        // res.json({ new: book_authors[0] })
-        // return knex('book_authors')
-        //     .insert(body)
-        //     .returning('*')
-        //     .then(book_authors => res.json({ new: book_authors[0]}))
-        //     .catch(err => console.error(err))
     }
 }
 // const editBook = (req, res, next) => {
