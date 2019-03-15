@@ -57,29 +57,29 @@ const getAll = (req, res, next) => {
 const postBook = (req, res, next) => {
   const body = req.body
   if (!body.author_id || !body.book_id) {
-    res
-      .status(400)
-      .json({
-        error: "Please make sure the author and book are in the database"
-      })
+    res.status(400).json({
+      error: "Please make sure the author and book are in the database"
+    })
   } else {
     if (body.author_id.length > 1) {
       let response = []
-      knex("book_authors")
-        .insert(body.author_id)
-        .returning("*")
-        .then(res => console.log(res))
-        // Promise.all(body.author_id.map((author, i) => {
-        //     return knex('book_authors')
-        //         .insert({author_id: author, book_id: body.book_id})
-        //         .returning('*')
-        //         .then((book_authors) => {
-        //             response.push(book_authors[0])
-        //             return book_authors
-        //         })
-        //         .catch(err => console.error(err))
-        // }))
-        // .then(() => res.json({new: response}))
+      //   knex("book_authors")
+      //     .insert(body.author_id)
+      //     .returning("*")
+      //     .then(res => console.log(res))
+      Promise.all(
+        body.author_id.map((author, i) => {
+          return knex("book_authors")
+            .insert({ author_id: author, book_id: body.book_id })
+            .returning("*")
+            .then(book_authors => {
+              response.push(book_authors[0])
+              return book_authors
+            })
+            .catch(err => console.error(err))
+        })
+      )
+        .then(() => res.json({ new: response }))
         .catch(err => {
           console.error(err)
           return res.json({ error: err })
