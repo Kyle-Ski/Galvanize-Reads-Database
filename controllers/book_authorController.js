@@ -63,10 +63,6 @@ const postBook = (req, res, next) => {
   } else {
     if (body.author_id.length > 1) {
       let response = []
-      //   knex("book_authors")
-      //     .insert(body.author_id)
-      //     .returning("*")
-      //     .then(res => console.log(res))
       Promise.all(
         body.author_id.map((author, i) => {
           return knex("book_authors")
