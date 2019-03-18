@@ -82,7 +82,7 @@ const postBook = (req, res, next) => {
         })
     } else {
       return knex("book_authors")
-        .insert(body)
+        .insert({ author_id: body.author_id[0], book_id: body.book_id })
         .returning("*")
         .then(data => res.json({ data: data[0] }))
         .catch(err => console.error(err))

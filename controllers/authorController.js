@@ -26,13 +26,10 @@ const getOne = (req, res, next) => {
 }
 const postAuthor = (req, res, next) => {
   const body = req.body
-  console.log("body:", body)
   if (!body.firstName || !body.lastName || !body.biography || !body.imageURL) {
-    res
-      .status(400)
-      .json({
-        error: "Please fill out all parts of the form to add an author."
-      })
+    res.status(400).json({
+      error: "Please fill out all parts of the form to add an author."
+    })
   } else {
     return knex("author")
       .insert(body)
